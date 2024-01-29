@@ -1,11 +1,3 @@
 <template>
-  <div>
-    <SearchInput/>
-  </div>
+<NuxtPage />
 </template>
-
-<style>
-body{
-  margin: 1rem;
-}
-</style>
