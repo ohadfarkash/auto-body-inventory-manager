@@ -1,10 +1,4 @@
 <script setup>
-const { data } = await useFetch('/api/ro/locations?ro=11000');
-console.log(data)
-// const items = data.value.map(v=>{...v, remove: {class:'text-right'}})
-// console.log(items.value)
-
-
 const columns = [{
     key: 'view',
     class: 'td_view'
@@ -20,8 +14,7 @@ const columns = [{
     key: 'remove',
     class: 'td_remove'
 }]
-const items = ref(data.value)
-
+defineProps(['items'])
 </script>
 
 <template>

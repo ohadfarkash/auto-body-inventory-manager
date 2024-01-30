@@ -1,28 +1,38 @@
 <script setup>
-const value = ref('')
+const value = defineModel()
 const isLoading = ref(false)
-function toggleLoading() {
-    isLoading.value = !isLoading.value;
-}
+defineEmits(['search'])
 </script>
 
 <template>
     <label class="text-xl">Repair Order Number</label>
-    <div>
+    <div class="search_bar">
         <UInput 
+            class="search_input"
             icon="i-heroicons-magnifying-glass-20-solid"
             size="xl"
             v-model="value"
             placeholder="Enter an RO Number..."
             :loading="isLoading ? true : null"
-            @keyup.enter="toggleLoading"
+            @keyup.enter="$emit('search')"
         />
+        <UButton
+        size="xl"
+        @click="$emit('search')"
+        >
+            Search
+        </UButton>
     </div>
 </template>
 
 <style>
-.addToLoc{
-    display: block;
-    margin: 1rem auto 1rem auto;
+.search_bar{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: .5rem;
+    &>.search_input{
+        flex-grow: 1;
+    }
 }
 </style>

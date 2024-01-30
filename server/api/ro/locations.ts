@@ -2,7 +2,10 @@ import { db } from '~/server/utils/db'
 
 export default defineEventHandler(async (event) => {
     const query = getQuery(event)
-    const locationIDs = await getLocationIDs(query.ro as number)
+    var locationIDs : number[] = []
+    if (query.ro){
+        locationIDs = await getLocationIDs(query.ro as number)
+    }
     let locations = []
     for (let i = 0; i < locationIDs.length; i++) {
         let id = locationIDs[i]
