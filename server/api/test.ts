@@ -1,10 +1,11 @@
 import { db } from '../utils/db'
 
 export default defineEventHandler(async (event) => {
-    return await getFullLocation()
+    const query = getQuery(event)
+    return await getFullLocation(query.id as number)
 })
 
-async function getFullLocation() {
+async function getFullLocation(id: number) {
     let sql = `
     WITH RECURSIVE full_location AS (
         SELECT
@@ -16,7 +17,7 @@ async function getFullLocation() {
         FROM
             public.location
         WHERE
-            id = 7
+            id = $1
         UNION
         SELECT
             l.id,
@@ -31,7 +32,7 @@ async function getFullLocation() {
     SELECT * FROM full_location;
     `
 
-    const res = await db.query(sql)
-    let models = res.rows
+    const res = await db.query(sql, [id])
+    let models = res.rows.reverse()
     return models
 }
