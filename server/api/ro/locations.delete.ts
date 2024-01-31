@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     let location = await LocationOps.getFromCode(location_code)
     if (location) {
         try {
-            var res = await insertRO(ro_number, location.id)
+            var res = await deleteRO(ro_number, location.id)
         } catch (error: any) {
             console.error(error)
             throw createError({
@@ -26,10 +26,10 @@ export default defineEventHandler(async (event) => {
     }
 })
 
-async function insertRO(ro: number, location_id: number) {
+async function deleteRO(ro: number, location_id: number) {
     let sql = `
-    INSERT INTO public.repair_order (ro_number, location_id)
-    VALUES ($1, $2)
+    DELETE FROM public.repair_order
+    WHERE ro_number = $1 AND location_id = $2
     `
     const res = await db.query(sql, [ro, location_id])
     let models = res.rows

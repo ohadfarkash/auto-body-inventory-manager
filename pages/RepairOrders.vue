@@ -27,16 +27,23 @@ await useFetch(baseurl, {
 
 const ro_number = ref('')
 
-function onsearch() {
+function search() {
     showAddButton.value = !!ro_number.value.length
-    console.log(showAddButton.value)
     ro.value = ro_number.value
+    triggerRef(ro)
 }
 
-const isOpen = ref(false)
+const modalData = reactive({roNum:ro_number, isOpen:false})
 function openAddToLocationModal(){
-    isOpen.value = true
+    modalData.isOpen = true
 }
+watch(toRefs(modalData).isOpen, v=>{
+    if (!v) {
+        search()
+    }
+})
+
+
 </script>
 
 <template>
@@ -46,15 +53,15 @@ function openAddToLocationModal(){
     </header>
     <UBreadcrumb divider="/" :links="[{ label: 'Home', to: '/' }, { label: 'Repair Orders', to: '/repairorders' }]" />
     <div>
-        <SearchInput @search="onsearch" v-model="ro_number" />
+        <SearchInput @search="search" v-model="ro_number" />
         <div :style="showAddButton ? 'height: 6.75rem;' : 'height: 0px;'" class="addToLocWrapper">
             <UButton class="addToLoc" size="xl" @click="openAddToLocationModal">
                 Add RO to a Location
             </UButton>
         </div>
-        <ListROLocations2 :items="items" />
+        <ListROLocations :items="items" :ro_number="ro_number" @delete="search"/>
     </div>
-    <ModalLocationInput v-model="isOpen"/>
+    <ModalLocationInput v-model="modalData"/>
 </template>
   
 <style>

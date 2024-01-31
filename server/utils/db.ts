@@ -59,3 +59,15 @@ export function sql(s: TemplateStringsArray, ...v: any): string {
         }
     }
 }
+
+var errorCodes : {[key: string]: string} = {
+    '23505': `Duplicate Error! Can't add this more than once.`
+}
+export function readDBError(error: any){
+    let desc = errorCodes[error.code]
+    if (desc) {
+        return desc
+    } else {
+        return 'Unknown Error! Change something and try again.'
+    }
+}

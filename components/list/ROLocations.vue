@@ -14,7 +14,27 @@ const columns = [{
     key: 'remove',
     class: 'td_remove'
 }]
-defineProps(['items'])
+const props = defineProps(['items', 'ro_number'])
+const emit = defineEmits(['delete'])
+
+async function deleteLocation(e, row){
+    if (window.confirm(`Are you sure you want to remove ${props.ro_number} from ${row.id}?`)){
+        try {
+            const res = await $fetch('/api/ro/locations', {
+                method: 'DELETE',
+                body: {
+                    ro: props.ro_number,
+                    location: row.id
+                }
+            })
+            emit('delete', [res])
+            //console.log(res)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+}
+
 </script>
 
 <template>
@@ -27,7 +47,7 @@ defineProps(['items'])
             <span class="whitespace-pre-line">{{ row.description }}</span>
         </template>
         <template #remove-data="{ row }">
-            <UButton class="remove_button" :padded=" false " color="gray" variant="link">
+            <UButton class="remove_button" :padded=" false " color="gray" variant="link" @click="deleteLocation($event, row)">
                 <Icon size="24" name="material-symbols:variable-remove-rounded" color="darkred" />
                 <p style="color:darkred;">Remove</p>
             </UButton>

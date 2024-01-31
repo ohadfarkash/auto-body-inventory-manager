@@ -1,13 +1,48 @@
 <script setup>
-const isOpen = defineModel()
+const modal = defineModel()
+const {roNum, isOpen} = toRefs(modal.value)
+const inputBar = ref(null)
 
 const location = ref('')
 function onkeyup(e){
-    
+    if (e.key == 'Enter'){
+        onClickAdd()
+    }
 }
+
 
 function closeModal(){
     isOpen.value = false
+}
+
+const showError = ref(false)
+const errorMsg = ref('')
+
+watch(isOpen, v=>{
+    if (v){
+        showError.value = false;
+        location.value = '';
+    }
+})
+onMounted(() => {
+    console.log(inputBar.value)
+})
+
+async function onClickAdd() {
+    try {
+        const res = await $fetch('/api/ro/locations', {
+            method: 'PUT',
+            body: {
+                ro: roNum.value,
+                location: location.value
+            }
+        },)
+        console.log("success")
+        closeModal()
+    } catch (error) {
+        showError.value = true
+        errorMsg.value = error.statusMessage
+    }
 }
 </script>
 
@@ -23,11 +58,12 @@ function closeModal(){
             </template>
             <div>
                 <p class="pb-4">Enter a Location ID to add Repair Order to location.</p>
-                <UInput size="xl" color="gray" variant="outline" placeholder="A##-B##-C##" v-model="location" @keyup="onkeyup"/>
+                <UInput ref="inputBar" size="xl" color="gray" variant="outline" placeholder="A##-B##-C##" v-model="location" @keyup="onkeyup"/>
+                <p class="error_msg" v-show="showError">{{ errorMsg }}</p>
             </div>
             <template #footer>
                 <div class="footer">
-                    <UButton class="ml-auto block" size="xl" @click="closeModal">Add</UButton>
+                    <UButton class="ml-auto block" size="xl" @click="onClickAdd">Add</UButton>
                 </div>
             </template>
         </UCard>
@@ -53,6 +89,11 @@ function closeModal(){
         display: flex;
         flex-direction: row;
         align-items: flex-end;
+    }
+
+    & .error_msg {
+        margin-top: 1rem;
+        color: darkred;
     }
 }
 </style>

@@ -2,7 +2,7 @@
 
 async function onClick() {
     const res = await $fetch('/api/ro/locations', {
-        method: 'PUT',
+        method: 'DELETE',
         body: {
             ro: 11555,
             location: 'S01-C01-R03'
