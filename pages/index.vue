@@ -24,6 +24,12 @@ body {
   max-width: 720px;
 }
 
+@media only screen and (max-width: 720px) {
+  body {
+      margin: 1rem;
+  }
+}
+
 header {
   display: flex;
   flex-direction: row;

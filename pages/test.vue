@@ -1,12 +1,17 @@
 <script setup>
-const value = ref('')
-function onkeyup(e){
-    console.log(e)
-    console.log(value)
+
+async function onClick() {
+    const res = await $fetch('/api/ro/locations', {
+        method: 'PUT',
+        body: {
+            ro: 11555,
+            location: 'S01-C01-R03'
+        }
+    })
+    console.log(res)
 }
 </script>
 
 <template>
-
-    <SearchInput @search="onkeyup" v-model="value"/>
+    <button @click="onClick">Click Me!</button>
 </template>

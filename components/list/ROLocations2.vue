@@ -27,7 +27,7 @@ defineProps(['items'])
             <span class="whitespace-pre-line">{{ row.description }}</span>
         </template>
         <template #remove-data="{ row }">
-            <UButton :padded=" false " color="gray" variant="link">
+            <UButton class="remove_button" :padded=" false " color="gray" variant="link">
                 <Icon size="24" name="material-symbols:variable-remove-rounded" color="darkred" />
                 <p style="color:darkred;">Remove</p>
             </UButton>
@@ -45,5 +45,11 @@ defineProps(['items'])
 }
 .td_remove{
     width: 10rem;
+}
+
+@media only screen and (max-width: 720px) {
+    .remove_button p {
+        display: none;
+    }
 }
 </style>
