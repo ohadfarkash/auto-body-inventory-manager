@@ -1,17 +1,11 @@
 <script setup>
-
-async function onClick() {
-    const res = await $fetch('/api/ro/locations', {
-        method: 'DELETE',
-        body: {
-            ro: 11555,
-            location: 'S01-C01-R03'
-        }
-    })
-    console.log(res)
+const print = ref('')
+function onScan(e) {
+    print.value = e + ''
 }
 </script>
 
 <template>
-    <button @click="onClick">Click Me!</button>
+    <QRcodeScanner style="width: 400px; height: 400px;" @result="onScan" />
+    <p>{{ print }}</p>
 </template>

@@ -1,7 +1,7 @@
 <script setup>
 const modal = defineModel()
 const {roNum, isOpen} = toRefs(modal.value)
-const inputBar = ref(null)
+const inputBar = ref()
 
 const location = ref('')
 function onkeyup(e){
@@ -25,7 +25,7 @@ watch(isOpen, v=>{
     }
 })
 onMounted(() => {
-    console.log(inputBar.value)
+    console.log(inputBar)
 })
 
 async function onClickAdd() {
@@ -58,7 +58,7 @@ async function onClickAdd() {
             </template>
             <div>
                 <p class="pb-4">Enter a Location ID to add Repair Order to location.</p>
-                <UInput ref="inputBar" size="xl" color="gray" variant="outline" placeholder="A##-B##-C##" v-model="location" @keyup="onkeyup"/>
+                <UInput size="xl" color="gray" variant="outline" placeholder="A##-B##-C##" v-model="location" @keyup="onkeyup"/>
                 <p class="error_msg" v-show="showError">{{ errorMsg }}</p>
             </div>
             <template #footer>
@@ -68,6 +68,7 @@ async function onClickAdd() {
             </template>
         </UCard>
     </UModal>
+    <UForm ref="inputBar" :state="reactive({})"></UForm>
 </template>
 
 <style>
