@@ -39,9 +39,9 @@ header {
   flex-direction: row;
   align-items: flex-end;
   justify-content: space-between;
-
+  gap: 1rem;
   &>h1 {
-    font-size: 2.2rem;
+    font-size: 1.4rem;
     font-weight: 600;
   }
 
