@@ -5,6 +5,10 @@ const links = [
   {
     label: 'Repair Order Locations',
     to: '/repairorders'
+  },
+  {
+    label: 'Stock-Part Locations',
+    to: '/parts'
   }
 ]
 </script>
@@ -26,7 +30,7 @@ body {
 
 @media only screen and (max-width: 720px) {
   body {
-      margin: 1rem;
+    margin: 1rem;
   }
 }
 

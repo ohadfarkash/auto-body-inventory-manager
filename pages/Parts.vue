@@ -1,49 +1,4 @@
 <script setup>
-const baseurl = '/api/ro/locations'
-const items = ref([])
-const ro = ref('')
-const showAddButton = ref(false)
-
-await useFetch(baseurl, {
-    query: { ro },
-    onRequest({ request, options }) {
-        //console.log("[fetch request]", request, options);
-    },
-    async onRequestError({ request, options, error }) {
-        // Log error
-        console.log("[fetch request error]", request, error);
-    },
-    onResponse({ request, response, options }) {
-        //console.log("[fetch response]", request, response._data);
-        items.value = response._data.map(v => {
-            v.remove = { class: 'text-right' }
-            return v
-        })
-    },
-    onResponseError({ request, response, options }) {
-        //console.log(response)
-    }
-});
-
-const ro_number = ref('')
-
-function search() {
-    showAddButton.value = !!ro_number.value.length
-    ro.value = ro_number.value
-    triggerRef(ro)
-}
-
-const modalData = reactive({roNum:ro_number, isOpen:false})
-function openAddToLocationModal(){
-    modalData.isOpen = true
-}
-watch(toRefs(modalData).isOpen, v=>{
-    if (!v) {
-        search()
-    }
-})
-
-
 </script>
 
 <template>
