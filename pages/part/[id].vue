@@ -357,4 +357,5 @@ async function addPartToNewLocation(e: any) {
     }
 
     margin-bottom: 2rem;
-}</style>
+}
+</style>

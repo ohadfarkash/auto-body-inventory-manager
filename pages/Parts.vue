@@ -153,33 +153,6 @@ async function createNewPart(e: any) {
 </template>
   
 <style>
-body {
-    margin: 1rem auto 0 auto;
-    max-width: 720px;
-}
-
-header {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
-
-    &>h1 {
-        font-size: 2.2rem;
-        font-weight: 600;
-    }
-}
-
-img.logo {
-    height: 6rem;
-}
-
-label {
-    display: block;
-    font-weight: bold;
-    margin: 1rem 0 .5rem 0;
-}
-
 .addToLocWrapper {
     overflow: hidden;
     transition-property: height;

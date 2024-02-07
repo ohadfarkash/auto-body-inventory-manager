@@ -60,11 +60,6 @@ async function deleteLocation(e, row){
 </template>
 
 <style>
-label {
-    display: block;
-    font-weight: bold;
-    margin: 1rem 0 .5rem 0;
-}
 @media only screen and (max-width: 720px) {
     .remove_button p {
         display: none;
