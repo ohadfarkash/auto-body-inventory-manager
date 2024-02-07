@@ -10,14 +10,14 @@ const part_data = await $fetch('/api/part', {
 })
 
 const locations = ref<any[]>([])
-async function reloadLocations(){
+async function reloadLocations() {
     locations.value = await $fetch('/api/part/locations', {
         query: {
             id: route.params.id
         }
     })
 }
-onMounted(()=>{
+onMounted(() => {
     reloadLocations()
 })
 
@@ -35,7 +35,7 @@ function onRemove(e: any, row: any) {
     removeQty.value = 1
 }
 
-function closeRemoveModal(e: any){
+function closeRemoveModal(e: any) {
     removeModalIsOpen.value = false
 }
 
@@ -89,7 +89,7 @@ function onAdd(e: any, row: any) {
     addModalData.error = false
     addQty.value = 1
 }
-function closeAddModal(e: any){
+function closeAddModal(e: any) {
     addModalIsOpen.value = false
 }
 async function addPartToLocation(e: any) {
@@ -115,13 +115,13 @@ const newQty = ref(0)
 const newModalData = reactive({
     error: false
 })
-function onNew(){
+function onNew() {
     newModalData.error = false
     newModalIsOpen.value = true
     newQty.value = 0
     newLocation.value = ''
 }
-function closeNewModal(e: any){
+function closeNewModal(e: any) {
     newModalIsOpen.value = false
 }
 async function addPartToNewLocation(e: any) {
@@ -156,12 +156,16 @@ async function addPartToNewLocation(e: any) {
 
             <div class="body">
                 <h2 class="mb-2 font-semibold text-lg">Enter Qty to Remove</h2>
-                <UInput v-model="removeQty" :max="removeModalData.qty" min="0" class="qty" size="xl" name="Qty to Remove" type="number" placeholder="Enter Qty"/>
+                <UInput v-model="removeQty" :max="removeModalData.qty" min="0" class="qty" size="xl" name="qty"
+                    type="number" placeholder="Enter Qty" />
                 <UDivider type="dashed" />
                 <div class="grid">
-                    <p class="loc_info">Location:</p><p>{{ removeModalData.location }}</p>
-                    <p class="qty_info">Current Qty:</p><p>{{ removeModalData.qty }}</p>
-                    <p class="qty_info">Qty after removal:</p><p>{{ removeModalData.qty - removeQty }}</p>
+                    <p class="loc_info">Location:</p>
+                    <p>{{ removeModalData.location }}</p>
+                    <p class="qty_info">Current Qty:</p>
+                    <p>{{ removeModalData.qty }}</p>
+                    <p class="qty_info">Qty after removal:</p>
+                    <p>{{ removeModalData.qty - removeQty }}</p>
                 </div>
             </div>
 
@@ -173,7 +177,7 @@ async function addPartToNewLocation(e: any) {
         </UCard>
     </UModal>
 
-    
+
     <UModal class="addModal" v-model="addModalIsOpen">
         <UCard>
             <template #header>
@@ -186,12 +190,16 @@ async function addPartToNewLocation(e: any) {
 
             <div class="body">
                 <h2 class="mb-2 font-semibold text-lg">Enter Qty to Add</h2>
-                <UInput v-model="addQty" min="0" class="qty" size="xl" name="Qty to Remove" type="number" placeholder="Enter Qty"/>
+                <UInput v-model="addQty" min="0" class="qty" size="xl" name="qty" type="number"
+                    placeholder="Enter Qty" />
                 <UDivider type="dashed" />
                 <div class="grid">
-                    <p class="loc_info">Location:</p><p>{{ addModalData.location }}</p>
-                    <p class="qty_info">Current Qty:</p><p>{{ addModalData.qty }}</p>
-                    <p class="qty_info">Qty after adding:</p><p>{{ addModalData.qty + addQty }}</p>
+                    <p class="loc_info">Location:</p>
+                    <p>{{ addModalData.location }}</p>
+                    <p class="qty_info">Current Qty:</p>
+                    <p>{{ addModalData.qty }}</p>
+                    <p class="qty_info">Qty after adding:</p>
+                    <p>{{ addModalData.qty + addQty }}</p>
                 </div>
             </div>
 
@@ -216,14 +224,15 @@ async function addPartToNewLocation(e: any) {
 
             <div class="body">
                 <h2 class="mb-2 font-semibold text-lg">Enter Location</h2>
-                <UInput v-model="newLocation" class="qty" size="xl" name="Qty to Remove"/>
+                <UInput v-model="newLocation" class="qty" size="xl" name="location" />
                 <h2 class="mb-2 font-semibold text-lg mt-4">Enter Qty to Add</h2>
-                <UInput v-model="newQty" min="0" class="qty" size="xl" name="Qty to Remove" type="number" placeholder="Enter Qty"/>
+                <UInput v-model="newQty" min="0" class="qty" size="xl" name="qty" type="number"
+                    placeholder="Enter Qty" />
             </div>
 
             <template #footer>
                 <div class="w-100 flex flex-row justify-between">
-                    <p class="text-red-800" v-show="addModalData.error">Could not add part to location!</p>
+                    <p class="text-red-800" v-show="newModalData.error">Could not add part to location!</p>
                     <UButton class="ml-auto block bg-green-800" size="xl" @click="addPartToNewLocation">Add</UButton>
                 </div>
             </template>
@@ -246,16 +255,15 @@ async function addPartToNewLocation(e: any) {
         <p>{{ part_data.name }}</p>
     </div>
 
-    <h2 class="text-xl font-semibold">Locations:</h2>
-
     <div class="locations_table">
-        <h2 class="id text-left rtl:text-right px-3 py-3.5 text-gray-900 dark:text-white font-semibold text-sm">Location</h2>
+        <h2 class="id text-left rtl:text-right px-3 py-3.5 text-gray-900 dark:text-white font-semibold text-sm">Location
+        </h2>
         <h2 class="desc text-left rtl:text-right px-3 py-3.5 text-gray-900 dark:text-white font-semibold text-sm">
             Description</h2>
         <h2 class="qty text-left rtl:text-right px-3 py-3.5 text-gray-900 dark:text-white font-semibold text-sm">Qty</h2>
         <h2></h2>
-        <div class="sep"></div>
-        <template v-for="item in locations">
+        <div class="head_sep"></div>
+        <template v-for="item in locations" v-if="locations.length > 0">
             <p class="id px-3 py-4 text-gray-500 dark:text-gray-400 text-sm">{{ item.id }}</p>
             <p class="desc px-3 py-4 text-gray-500 dark:text-gray-400 text-sm">{{ item.description }}</p>
             <p class="qty px-3 py-4 text-gray-500 dark:text-gray-400 text-sm">{{ item.qty }}</p>
@@ -271,30 +279,38 @@ async function addPartToNewLocation(e: any) {
             </div>
             <div class="sep"></div>
         </template>
+        <div v-else class="col-span-full flex flex-col justify-center m-6">
+            <Icon class="m-auto" size="48" name="material-symbols:database" color="lightgray" />
+            <p class="m-auto text-gray-400">No Locations Found</p>
+        </div>
     </div>
-    
+
     <div class="w-100">
         <UButton @click="onNew" class="ml-auto block" color="gray">Add to New Location</UButton>
     </div>
 </template>
 
 <style>
-.removeModal,.addModal{
-    .body{
-        div.grid{
+.removeModal,
+.addModal {
+    .body {
+        div.grid {
             margin-top: 1rem;
             display: grid;
             grid-template-columns: min-content min-content;
             gap: 1rem;
-            p{
+
+            p {
                 white-space: nowrap;
             }
         }
-        .qty{
+
+        .qty {
             margin-bottom: 1.5rem;
         }
     }
 }
+
 .locations_table {
     display: grid;
     grid-template-columns: min-content auto min-content min-content;
@@ -307,13 +323,14 @@ async function addPartToNewLocation(e: any) {
         white-space: pre-line;
     }
 
+    .head_sep {
+        grid-column: 1 / 5;
+        border-bottom: 1px solid lightgray;
+    }
+
     & .sep {
         grid-column: 1 / 5;
         border-bottom: 1px solid rgb(235, 235, 235);
-    }
-
-    & .sep:first-child {
-        border-bottom: 1px solid lightgray;
     }
 
     & .sep:last-child {
@@ -340,5 +357,4 @@ async function addPartToNewLocation(e: any) {
     }
 
     margin-bottom: 2rem;
-}
-</style>
+}</style>
