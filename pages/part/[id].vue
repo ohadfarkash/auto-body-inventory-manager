@@ -154,7 +154,7 @@ const moveLocation = ref('')
 const moveQty = ref(0)
 const moveModalData = reactive({
     currentQty: 0,
-    currentLocation: 0,
+    currentLocation: '',
     error: false
 })
 function onMove(e: any, row: any) {
@@ -163,6 +163,7 @@ function onMove(e: any, row: any) {
     moveQty.value = row.qty
     moveLocation.value = ''
     moveModalData.currentQty = row.qty
+    removeModalData.qty = row.qty
     moveModalData.currentLocation = row.id
     setTimeout(() => {
         document.getElementById('move-modal-first')?.focus()
@@ -172,19 +173,17 @@ function closeMoveModal(e: any) {
     moveModalIsOpen.value = false
 }
 async function movePartLocation(e: any) {
+    removeQty.value = moveQty.value
+    removeModalData.location = moveModalData.currentLocation
+    newQty.value = moveQty.value
+    newLocation.value = moveLocation.value
     try {
-        const res = await $fetch('/api/part/locations', {
-            method: 'PUT',
-            body: {
-                part_id: route.params.id,
-                location: newLocation.value,
-                qty: newQty.value
-            }
-        })
-        closeNewModal(null)
+        removePartFromLocation(e)
+        addPartToNewLocation(e)
+        closeMoveModal(null)
         reloadLocations()
     } catch (error) {
-        newModalData.error = true
+        moveModalData.error = true
     }
 }
 

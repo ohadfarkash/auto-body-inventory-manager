@@ -22,6 +22,7 @@ header {
   gap: 1rem;
   &>h1 {
     font-size: 1.4rem;
+    font-style: italic;
     font-weight: 600;
   }
 
@@ -29,7 +30,7 @@ header {
 }
 
 img.logo {
-  height: 6rem;
+  height: 4rem;
 }
 
 label {

@@ -6,6 +6,11 @@ const state = reactive({
     part_name: ''
 })
 
+onMounted(()=>{
+    //await nextTick()
+    document.getElementById('first_input')?.focus()
+})
+
 // const validate = (state: any): FormError[] => {
 //   const errors = []
 //   if (!state.email && !state.part_name) {
@@ -103,7 +108,7 @@ async function createNewPart(e: any) {
     <div>
         <UForm :state="state" class="space-y-4" @submit="onSubmit">
             <UFormGroup label="Part Number" name="part_num">
-                <UInput v-model="state.part_num" />
+                <UInput v-model="state.part_num" id="first_input"/>
             </UFormGroup>
 
             <UFormGroup label="Part Name" name="part_name">
