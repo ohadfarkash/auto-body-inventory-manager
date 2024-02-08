@@ -33,12 +33,14 @@ function onRemove(e: any, row: any) {
     removeModalData.location = row.id
     removeModalData.qty = row.qty
     removeQty.value = 1
+    setTimeout(() => {
+        document.getElementById('remove-modal-first')?.focus()
+    }, 100);
 }
 
 function closeRemoveModal(e: any) {
     removeModalIsOpen.value = false
 }
-
 
 async function removePartFromLocation(e: any) {
     let qty = removeModalData.qty - removeQty.value
@@ -88,6 +90,9 @@ function onAdd(e: any, row: any) {
     addModalData.qty = row.qty
     addModalData.error = false
     addQty.value = 1
+    setTimeout(() => {
+        document.getElementById('add-modal-first')?.focus()
+    }, 100);
 }
 function closeAddModal(e: any) {
     addModalIsOpen.value = false
@@ -118,8 +123,11 @@ const newModalData = reactive({
 function onNew() {
     newModalData.error = false
     newModalIsOpen.value = true
-    newQty.value = 0
+    newQty.value = 1
     newLocation.value = ''
+    setTimeout(() => {
+        document.getElementById('new-modal-first')?.focus()
+    }, 100);
 }
 function closeNewModal(e: any) {
     newModalIsOpen.value = false
@@ -141,6 +149,50 @@ async function addPartToNewLocation(e: any) {
     }
 }
 
+const moveModalIsOpen = ref(false)
+const moveLocation = ref('')
+const moveQty = ref(0)
+const moveModalData = reactive({
+    currentQty: 0,
+    currentLocation: 0,
+    error: false
+})
+function onMove(e: any, row: any) {
+    moveModalData.error = false
+    moveModalIsOpen.value = true
+    moveQty.value = row.qty
+    moveLocation.value = ''
+    moveModalData.currentQty = row.qty
+    moveModalData.currentLocation = row.id
+    setTimeout(() => {
+        document.getElementById('move-modal-first')?.focus()
+    }, 100);
+}
+function closeMoveModal(e: any) {
+    moveModalIsOpen.value = false
+}
+async function movePartLocation(e: any) {
+    try {
+        const res = await $fetch('/api/part/locations', {
+            method: 'PUT',
+            body: {
+                part_id: route.params.id,
+                location: newLocation.value,
+                qty: newQty.value
+            }
+        })
+        closeNewModal(null)
+        reloadLocations()
+    } catch (error) {
+        newModalData.error = true
+    }
+}
+
+function triggerOnEnterKeyUp(e: any, cb: any) {
+    if (e.key == 'Enter') {
+        cb(e)
+    }
+}
 </script>
 
 <template>
@@ -156,8 +208,9 @@ async function addPartToNewLocation(e: any) {
 
             <div class="body">
                 <h2 class="mb-2 font-semibold text-lg">Enter Qty to Remove</h2>
-                <UInput v-model="removeQty" :max="removeModalData.qty" min="0" class="qty" size="xl" name="qty"
-                    type="number" placeholder="Enter Qty" />
+                <UInput v-model="removeQty" :max="removeModalData.qty" min="0" class="qty" id="remove-modal-first" size="xl"
+                    name="qty" type="number" placeholder="Enter Qty"
+                    @keyup="triggerOnEnterKeyUp($event, removePartFromLocation)" />
                 <UDivider type="dashed" />
                 <div class="grid">
                     <p class="loc_info">Location:</p>
@@ -190,8 +243,8 @@ async function addPartToNewLocation(e: any) {
 
             <div class="body">
                 <h2 class="mb-2 font-semibold text-lg">Enter Qty to Add</h2>
-                <UInput v-model="addQty" min="0" class="qty" size="xl" name="qty" type="number"
-                    placeholder="Enter Qty" />
+                <UInput v-model="addQty" min="0" class="qty" id="add-modal-first" size="xl" name="qty" type="number"
+                    placeholder="Enter Qty" @keyup="triggerOnEnterKeyUp($event, addPartToLocation)" />
                 <UDivider type="dashed" />
                 <div class="grid">
                     <p class="loc_info">Location:</p>
@@ -224,16 +277,53 @@ async function addPartToNewLocation(e: any) {
 
             <div class="body">
                 <h2 class="mb-2 font-semibold text-lg">Enter Location</h2>
-                <UInput v-model="newLocation" class="qty" size="xl" name="location" />
+                <UInput v-model="newLocation" class="qty" id="new-modal-first" size="xl" name="location" />
                 <h2 class="mb-2 font-semibold text-lg mt-4">Enter Qty to Add</h2>
-                <UInput v-model="newQty" min="0" class="qty" size="xl" name="qty" type="number"
-                    placeholder="Enter Qty" />
+                <UInput v-model="newQty" min="0" class="qty" size="xl" name="qty" type="number" placeholder="Enter Qty"
+                    @keyup="triggerOnEnterKeyUp($event, addPartToNewLocation)" />
             </div>
 
             <template #footer>
                 <div class="w-100 flex flex-row justify-between">
                     <p class="text-red-800" v-show="newModalData.error">Could not add part to location!</p>
                     <UButton class="ml-auto block bg-green-800" size="xl" @click="addPartToNewLocation">Add</UButton>
+                </div>
+            </template>
+        </UCard>
+    </UModal>
+
+    <UModal class="moveModal" v-model="moveModalIsOpen">
+        <UCard>
+            <template #header>
+                <div class="flex flex-row items-center">
+                    <h1 class="text-xl font-bold">Move Parts To Location</h1>
+                    <UButton class="ml-auto block" :padded="false" color="gray" variant="link"
+                        icon="i-heroicons-x-mark-20-solid" square size="xl" @click="closeMoveModal"></UButton>
+                </div>
+            </template>
+
+            <div class="body">
+                <h2 class="mb-2 font-semibold text-lg">Enter Location</h2>
+                <UInput v-model="moveLocation" class="qty" id="move-modal-first" size="xl" name="location"
+                    @keyup="triggerOnEnterKeyUp($event, movePartLocation)" />
+                <h2 class="mb-2 font-semibold text-lg mt-4">Enter Qty to Move</h2>
+                <UInput v-model="moveQty" min="0" :max="moveModalData.currentQty" class="qty" size="xl" name="qty"
+                    type="number" placeholder="Enter Qty" @keyup="triggerOnEnterKeyUp($event, movePartLocation)" />
+                <UDivider type="dashed" />
+                <div class="grid">
+                    <p class="loc_info">Current Location:</p>
+                    <p>{{ moveModalData.currentLocation }}</p>
+                    <p class="qty_info">Current Qty:</p>
+                    <p>{{ moveModalData.currentQty }}</p>
+                    <p class="qty_info">Qty left after move:</p>
+                    <p>{{ moveModalData.currentQty - moveQty }}</p>
+                </div>
+            </div>
+
+            <template #footer>
+                <div class="w-100 flex flex-row justify-between">
+                    <p class="text-red-800" v-show="moveModalData.error">Could not add part to location!</p>
+                    <UButton class="ml-auto block bg-green-800" size="xl" @click="movePartLocation">Move</UButton>
                 </div>
             </template>
         </UCard>
@@ -269,12 +359,16 @@ async function addPartToNewLocation(e: any) {
             <p class="qty px-3 py-4 text-gray-500 dark:text-gray-400 text-sm">{{ item.qty }}</p>
             <div class="flex flex-col justify-center gap-2">
                 <UButton class="remove_button" :padded="false" color="gray" variant="link" @click="onAdd($event, item)">
-                    <Icon size="24" name="material-symbols:variable-add-rounded" color="darkgreen" />
+                    <Icon size="24" name="mdi:box-add" color="darkgreen" />
                     <p style="color:darkgreen;">Add</p>
                 </UButton>
                 <UButton class="remove_button" :padded="false" color="gray" variant="link" @click="onRemove($event, item)">
-                    <Icon size="24" name="material-symbols:variable-remove-rounded" color="darkred" />
+                    <Icon size="24" name="mdi:box-minus" color="darkred" />
                     <p style="color:darkred;">Remove</p>
+                </UButton>
+                <UButton class="move_button" :padded="false" color="gray" variant="link" @click="onMove($event, item)">
+                    <Icon size="24" name="mdi:box-edit" color="gray" />
+                    <p style="color:gray;">Move</p>
                 </UButton>
             </div>
             <div class="sep"></div>
@@ -292,7 +386,8 @@ async function addPartToNewLocation(e: any) {
 
 <style>
 .removeModal,
-.addModal {
+.addModal,
+.moveModal {
     .body {
         div.grid {
             margin-top: 1rem;
