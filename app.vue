@@ -1,5 +1,11 @@
+<script setup lang="ts">
+useHead({
+  title: 'ABIM'
+})
+</script>
+
 <template>
-<NuxtPage />
+  <NuxtPage />
 </template>
 
 <style>
@@ -20,6 +26,7 @@ header {
   align-items: flex-end;
   justify-content: space-between;
   gap: 1rem;
+
   &>h1 {
     font-size: 1.4rem;
     font-style: italic;
@@ -34,8 +41,8 @@ img.logo {
 }
 
 label {
-    display: block;
-    font-weight: bold;
-    margin: 1rem 0 .5rem 0;
+  display: block;
+  font-weight: bold;
+  margin: 1rem 0 .5rem 0;
 }
 </style>
